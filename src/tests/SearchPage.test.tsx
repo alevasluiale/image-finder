@@ -21,7 +21,7 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-const TestWrapper = ({ children }) => (
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <AppProvider>
     <BrowserRouter>{children}</BrowserRouter>
   </AppProvider>

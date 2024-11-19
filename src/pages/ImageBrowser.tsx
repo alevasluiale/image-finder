@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createApi } from "unsplash-js";
 import { useGlobalContext } from "../context";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
@@ -24,11 +24,12 @@ interface UnsplashImage {
   alt_description: string;
 }
 
-const unsplash = createApi({
-  accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
-});
+const createUnsplashApi = () =>
+  createApi({
+    accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
+  });
 
-const ImageBrowser: React.FC = () => {
+function ImageBrowser({ unsplashApi = createUnsplashApi() }) {
   const {
     data: { topic, otherTopic },
     updateField,
@@ -41,7 +42,7 @@ const ImageBrowser: React.FC = () => {
   const loadImage = async (topic: string) => {
     setLoading(true);
     try {
-      const result = await unsplash.photos.getRandom({
+      const result = await unsplashApi.photos.getRandom({
         query: topic === PreferredTopic.OTHER ? otherTopic : topic,
       });
       const photo = result.response;
@@ -157,6 +158,6 @@ const ImageBrowser: React.FC = () => {
     );
   }
   return null;
-};
+}
 
 export default ImageBrowser;
