@@ -6,14 +6,11 @@ import {
   TextField,
 } from "@mui/material";
 import styled from "@emotion/styled";
-
-enum PreferredTopic {
-  TRAVEL = "TRAVEL",
-  CARS = "CARS",
-  WILDLIFE = "WILDLIFE",
-  TECHNOLOGY = "TECHNOLOGY",
-  OTHER = "OTHER",
-}
+import { InputData, PreferredTopic } from "../constants.ts";
+import { useGlobalContext } from "../context.tsx";
+import { useEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import _ from "lodash";
 
 const TopicLabels: Record<PreferredTopic, string> = {
   [PreferredTopic.TRAVEL]: "Travel",
@@ -54,6 +51,46 @@ const StyledHeading = styled.h2`
 `;
 
 function SearchPage() {
+  const { data, updateField } = useGlobalContext();
+  const navigate = useNavigate();
+  const isUserInitiated = useRef(false);
+
+  // Wrap updateField to track user interactions
+  const handleFieldUpdate = (
+    field: keyof InputData,
+    value: string | PreferredTopic,
+  ) => {
+    isUserInitiated.current = true;
+    updateField(field, value);
+  };
+
+  // Debounced navigation for other topic
+  const debouncedNavigate = useMemo(
+    () => _.debounce((path: string) => navigate(path), 500),
+    [navigate],
+  );
+
+  useEffect(() => {
+    //To prevent always going to searching even if we go back from it
+    if (!isUserInitiated.current) {
+      return;
+    }
+
+    if (data.topic === PreferredTopic.OTHER) {
+      if (data.otherTopic?.trim()) {
+        debouncedNavigate("/searching");
+      }
+    } else if (data.topic) {
+      // Immediate navigation for predefined topics
+      navigate("/searching");
+    }
+
+    // Cleanup debounced function
+    return () => {
+      debouncedNavigate.cancel();
+    };
+  }, [data, navigate, debouncedNavigate]);
+
   return (
     <PageContainer>
       <FormContainer>
@@ -64,6 +101,8 @@ function SearchPage() {
           variant="filled"
           color="primary"
           sx={{ mb: 3 }}
+          value={data.name}
+          onChange={(e) => handleFieldUpdate("name", e.target.value)}
           fullWidth
         />
 
@@ -72,6 +111,8 @@ function SearchPage() {
           variant="filled"
           color="primary"
           fullWidth
+          value={data.surname}
+          onChange={(e) => handleFieldUpdate("surname", e.target.value)}
           sx={{ mb: 3 }}
         />
 
@@ -82,6 +123,11 @@ function SearchPage() {
             id="topic-select"
             label="Preferred Topic"
             variant="filled"
+            value={data.topic || ""}
+            onChange={(e) =>
+              handleFieldUpdate("topic", e.target.value as PreferredTopic)
+            }
+            sx={{ mb: 3 }}
           >
             {Object.values(PreferredTopic).map((topic) => (
               <MenuItem key={topic} value={topic}>
@@ -90,6 +136,18 @@ function SearchPage() {
             ))}
           </Select>
         </FormControl>
+
+        {data.topic === PreferredTopic.OTHER && (
+          <TextField
+            label="Topic"
+            variant="filled"
+            color="primary"
+            fullWidth
+            value={data.otherTopic}
+            onChange={(e) => updateField("otherTopic", e.target.value)}
+            sx={{ mb: 3 }}
+          />
+        )}
       </FormContainer>
     </PageContainer>
   );
