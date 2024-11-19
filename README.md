@@ -3,6 +3,14 @@ To start run :
 ```js
 npm run dev
 ```
+
+
+https://github.com/user-attachments/assets/ff46711d-743c-4f73-be37-6af55b845ddb
+
+
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
