@@ -128,6 +128,7 @@ function SearchPage() {
               handleFieldUpdate("topic", e.target.value as PreferredTopic)
             }
             sx={{ mb: 3 }}
+            inputProps={{ "data-testid": "topic-select" }}
           >
             {Object.values(PreferredTopic).map((topic) => (
               <MenuItem key={topic} value={topic}>
