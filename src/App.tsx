@@ -1,18 +1,25 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import SearchPage from "./pages/SearchPage.tsx";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SearchPage />} />
-        {/*<Route path="/show/:id" element={<ShowPage />} />*/}
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SearchPage />} />
+          {/*<Route path="/show/:id" element={<ShowPage />} />*/}
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

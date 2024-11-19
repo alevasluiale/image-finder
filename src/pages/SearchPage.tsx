@@ -5,6 +5,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import styled from "@emotion/styled";
 
 enum PreferredTopic {
   TRAVEL = "TRAVEL",
@@ -22,48 +23,75 @@ const TopicLabels: Record<PreferredTopic, string> = {
   [PreferredTopic.OTHER]: "Other",
 };
 
+// Styled container for the entire page
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  @media (max-width: 300px) {
+    padding: 0;
+  }
+`;
+
+// Styled form container
+const FormContainer = styled.div`
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+
+  @media (max-width: 300px) {
+    max-width: 100%;
+  }
+`;
+
+// Styled heading
+const StyledHeading = styled.h2`
+  text-align: center;
+  margin-bottom: 24px;
+`;
+
 function SearchPage() {
   return (
-    <>
-      <h2>Image finder</h2>
-      <TextField
-        label="Name"
-        // onChange={(e) => setEmail(e.target.value)}
-        variant="filled"
-        color="primary"
-        sx={{ mb: 3 }}
-        fullWidth
-        // value={email}
-        // error={emailError}
-      />
-      <TextField
-        label="Surname"
-        // onChange={(e) => setPassword(e.target.value)}
-        variant="filled"
-        color="primary"
-        // value={password}
-        // error={passwordError}
-        fullWidth
-        sx={{ mb: 3 }}
-      />
-      <FormControl sx={{ width: "100%" }}>
-        <InputLabel id="topic-select-label">Preferred Topic</InputLabel>
-        <Select
-          labelId="topic-select-label"
-          id="topic-select"
-          // value={age}
-          label="Preferred Topic"
-          // onChange={handleChange}
+    <PageContainer>
+      <FormContainer>
+        <StyledHeading>Image finder</StyledHeading>
+
+        <TextField
+          label="Name"
           variant="filled"
-        >
-          {Object.values(PreferredTopic).map((topic) => (
-            <MenuItem key={topic} value={topic}>
-              {TopicLabels[topic]}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </>
+          color="primary"
+          sx={{ mb: 3 }}
+          fullWidth
+        />
+
+        <TextField
+          label="Surname"
+          variant="filled"
+          color="primary"
+          fullWidth
+          sx={{ mb: 3 }}
+        />
+
+        <FormControl fullWidth>
+          <InputLabel id="topic-select-label">Preferred Topic</InputLabel>
+          <Select
+            labelId="topic-select-label"
+            id="topic-select"
+            label="Preferred Topic"
+            variant="filled"
+          >
+            {Object.values(PreferredTopic).map((topic) => (
+              <MenuItem key={topic} value={topic}>
+                {TopicLabels[topic]}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </FormContainer>
+    </PageContainer>
   );
 }
 
