@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { createApi } from "unsplash-js";
 import { useGlobalContext } from "../context";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface UnsplashImage {
   id: string;
   urls: {
     regular: string;
+    thumb: string;
+    small: string;
   };
   user: {
     name: string;
@@ -24,10 +27,12 @@ const unsplash = createApi({
   accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
 });
 
-const Gallery: React.FC = () => {
+const ImageBrowser: React.FC = () => {
   const {
     data: { topic },
+    updateField,
   } = useGlobalContext();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [photo, setPhoto] = useState<UnsplashImage>();
   const [error, setError] = useState(false);
@@ -35,12 +40,11 @@ const Gallery: React.FC = () => {
   const loadImage = async (topic: string) => {
     setLoading(true);
     try {
-      const result = await unsplash.search.getPhotos({
+      const result = await unsplash.photos.getRandom({
         query: topic,
-        perPage: 1,
       });
-      const photo = result.response?.results[0] as UnsplashImage;
-      setPhoto(photo);
+      const photo = result.response;
+      setPhoto(photo as UnsplashImage);
     } catch (error) {
       setError(true);
       console.error("Error fetching photos:", error);
@@ -54,6 +58,11 @@ const Gallery: React.FC = () => {
       loadImage(topic);
     }
   }, [topic]);
+
+  const acceptImage = () => {
+    updateField("selectedImageThumb", photo?.urls.small);
+    navigate("/accepted-image");
+  };
 
   if (loading) {
     return (
@@ -123,7 +132,7 @@ const Gallery: React.FC = () => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => console.log("Rejected")}
+            onClick={() => loadImage(topic || "")}
             sx={{
               minWidth: "100px",
               textTransform: "uppercase",
@@ -134,7 +143,7 @@ const Gallery: React.FC = () => {
           <Button
             variant="contained"
             color="success"
-            onClick={() => console.log("Accepted")}
+            onClick={acceptImage}
             sx={{
               minWidth: "100px",
               textTransform: "uppercase",
@@ -149,4 +158,4 @@ const Gallery: React.FC = () => {
   return null;
 };
 
-export default Gallery;
+export default ImageBrowser;

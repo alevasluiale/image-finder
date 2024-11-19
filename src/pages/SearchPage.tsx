@@ -78,18 +78,18 @@ function SearchPage() {
 
     if (data.topic === PreferredTopic.OTHER) {
       if (data.otherTopic?.trim()) {
-        debouncedNavigate("/searching");
+        debouncedNavigate("/browse-images");
       }
     } else if (data.topic) {
       // Immediate navigation for predefined topics
-      navigate("/searching");
+      navigate("/browse-images");
     }
 
     // Cleanup debounced function
     return () => {
       debouncedNavigate.cancel();
     };
-  }, [data, navigate, debouncedNavigate]);
+  }, [data.topic, data.otherTopic, navigate, debouncedNavigate]);
 
   return (
     <PageContainer>

@@ -11,4 +11,5 @@ export type InputData = {
   surname: string;
   topic?: PreferredTopic;
   otherTopic?: string;
+  selectedImageThumb?: string;
 };
