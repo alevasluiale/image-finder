@@ -3,6 +3,7 @@ import { createApi } from "unsplash-js";
 import { useGlobalContext } from "../context";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { PreferredTopic } from "../constants.ts";
 
 interface UnsplashImage {
   id: string;
@@ -29,7 +30,7 @@ const unsplash = createApi({
 
 const ImageBrowser: React.FC = () => {
   const {
-    data: { topic },
+    data: { topic, otherTopic },
     updateField,
   } = useGlobalContext();
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const ImageBrowser: React.FC = () => {
     setLoading(true);
     try {
       const result = await unsplash.photos.getRandom({
-        query: topic,
+        query: topic === PreferredTopic.OTHER ? otherTopic : topic,
       });
       const photo = result.response;
       setPhoto(photo as UnsplashImage);
@@ -57,7 +58,7 @@ const ImageBrowser: React.FC = () => {
     if (topic) {
       loadImage(topic);
     }
-  }, [topic]);
+  }, [topic, otherTopic]);
 
   const acceptImage = () => {
     updateField("selectedImageThumb", photo?.urls.small);
