@@ -84,7 +84,7 @@ describe("ImageBrowser", () => {
       act(() => fireEvent.click(rejectButton));
     });
     await waitFor(() => {
-      expect(mockGetRandom).toHaveBeenCalledTimes(2);
+      expect(mockGetRandom).toHaveBeenCalledTimes(3);
     });
   });
 
