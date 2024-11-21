@@ -96,7 +96,7 @@ describe("SearchPage", () => {
       () => {
         expect(mockNavigate).toHaveBeenCalledWith("/browse-images");
       },
-      { timeout: 600 },
+      { timeout: 3000 },
     );
   });
 });

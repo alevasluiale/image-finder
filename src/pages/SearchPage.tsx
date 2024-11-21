@@ -10,7 +10,7 @@ import {
 import styled from "@emotion/styled";
 import { InputData, PreferredTopic } from "../constants.ts";
 import { useGlobalContext } from "../context.tsx";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -61,38 +61,21 @@ function SearchPage() {
     field: keyof InputData,
     value?: string | PreferredTopic,
   ) => {
-    if (field === "topic") {
-      updateField("selectedImageThumb", undefined); //reset image on topic selection
+    if (field === "topic" && value && value !== PreferredTopic.OTHER) {
+      // Immediate navigation for predefined topics
+      navigate("/browse-images");
+    }
+    if (field === "otherTopic" && value) {
+      debouncedNavigate("/browse-images");
     }
     updateField(field, value);
   };
 
   // Debounced navigation for other topic
   const debouncedNavigate = useMemo(
-    () => _.debounce((path: string) => navigate(path), 500),
+    () => _.debounce((path: string) => navigate(path), 1000),
     [navigate],
   );
-
-  useEffect(() => {
-    //To prevent always going to searching even if we go back from it
-    if (data.selectedImageThumb) {
-      return;
-    }
-
-    if (data.topic === PreferredTopic.OTHER) {
-      if (data.otherTopic?.trim()) {
-        debouncedNavigate("/browse-images");
-      }
-    } else if (data.topic) {
-      // Immediate navigation for predefined topics
-      navigate("/browse-images");
-    }
-
-    // Cleanup debounced function
-    return () => {
-      debouncedNavigate.cancel();
-    };
-  }, [data, navigate, debouncedNavigate]);
 
   return (
     <PageContainer>
@@ -164,7 +147,7 @@ function SearchPage() {
             color="primary"
             fullWidth
             value={data.otherTopic}
-            onChange={(e) => updateField("otherTopic", e.target.value)}
+            onChange={(e) => handleFieldUpdate("otherTopic", e.target.value)}
             sx={{ mb: 3 }}
           />
         )}
