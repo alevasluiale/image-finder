@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import AcceptedImagePage from "../pages/AcceptedImagePage";
-import { AppProvider } from "../context";
 import { vi } from "vitest";
 import { PreferredTopic } from "../constants.ts";
 

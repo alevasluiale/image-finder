@@ -1,5 +1,7 @@
 import {
   FormControl,
+  IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -8,9 +10,10 @@ import {
 import styled from "@emotion/styled";
 import { InputData, PreferredTopic } from "../constants.ts";
 import { useGlobalContext } from "../context.tsx";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const TopicLabels: Record<PreferredTopic, string> = {
   [PreferredTopic.TRAVEL]: "Travel",
@@ -53,14 +56,14 @@ const StyledHeading = styled.h2`
 function SearchPage() {
   const { data, updateField } = useGlobalContext();
   const navigate = useNavigate();
-  const isUserInitiated = useRef(false);
-
   // Wrap updateField to track user interactions
   const handleFieldUpdate = (
     field: keyof InputData,
-    value: string | PreferredTopic,
+    value?: string | PreferredTopic,
   ) => {
-    isUserInitiated.current = true;
+    if (field === "topic") {
+      updateField("selectedImageThumb", undefined); //reset image on topic selection
+    }
     updateField(field, value);
   };
 
@@ -72,7 +75,7 @@ function SearchPage() {
 
   useEffect(() => {
     //To prevent always going to searching even if we go back from it
-    if (!isUserInitiated.current) {
+    if (data.selectedImageThumb) {
       return;
     }
 
@@ -89,7 +92,7 @@ function SearchPage() {
     return () => {
       debouncedNavigate.cancel();
     };
-  }, [data.topic, data.otherTopic, navigate, debouncedNavigate]);
+  }, [data, navigate, debouncedNavigate]);
 
   return (
     <PageContainer>
@@ -129,6 +132,22 @@ function SearchPage() {
             }
             sx={{ mb: 3 }}
             inputProps={{ "data-testid": "topic-select" }}
+            endAdornment={
+              <InputAdornment
+                sx={{ position: "absolute", right: 32 }}
+                position="end"
+              >
+                {data.topic && (
+                  <IconButton
+                    onClick={() => {
+                      handleFieldUpdate("topic", undefined);
+                    }}
+                  >
+                    <ClearIcon></ClearIcon>
+                  </IconButton>
+                )}
+              </InputAdornment>
+            }
           >
             {Object.values(PreferredTopic).map((topic) => (
               <MenuItem key={topic} value={topic}>

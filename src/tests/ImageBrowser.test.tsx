@@ -63,6 +63,8 @@ describe("ImageBrowser", () => {
   });
 
   test("displays image and buttons after loading", async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     render(<ImageBrowser unsplashApi={mockUnsplashApi} />, {
       wrapper: TestWrapper,
     });
@@ -75,6 +77,8 @@ describe("ImageBrowser", () => {
   });
 
   test("loads new image on reject", async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     render(<ImageBrowser unsplashApi={mockUnsplashApi} />, {
       wrapper: TestWrapper,
     });
@@ -89,6 +93,8 @@ describe("ImageBrowser", () => {
   });
 
   test("navigates to accepted page on accept", async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     render(<ImageBrowser unsplashApi={mockUnsplashApi} />, {
       wrapper: TestWrapper,
     });

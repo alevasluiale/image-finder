@@ -45,8 +45,9 @@ function ImageBrowser({ unsplashApi = createUnsplashApi() }) {
       const result = await unsplashApi.photos.getRandom({
         query: topic === PreferredTopic.OTHER ? otherTopic : topic,
       });
-      const photo = result.response;
-      setPhoto(photo as UnsplashImage);
+      const photo = result.response as UnsplashImage;
+      setPhoto(photo);
+      updateField("selectedImageThumb", photo?.urls.small);
     } catch (error) {
       setError(true);
       console.error("Error fetching photos:", error);
@@ -62,7 +63,6 @@ function ImageBrowser({ unsplashApi = createUnsplashApi() }) {
   }, [topic, otherTopic]);
 
   const acceptImage = () => {
-    updateField("selectedImageThumb", photo?.urls.small);
     navigate("/accepted-image");
   };
 
