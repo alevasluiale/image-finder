@@ -5,7 +5,11 @@ npm run dev
 ```
 
 
-https://github.com/user-attachments/assets/ff46711d-743c-4f73-be37-6af55b845ddb
+
+https://github.com/user-attachments/assets/b4850e7c-e13a-47bb-b917-8b0fc30d6581
+
+
+<img width="556" alt="image" src="https://github.com/user-attachments/assets/4f8a4836-b3c1-483a-805b-eb979f4047a2">
 
 
 
